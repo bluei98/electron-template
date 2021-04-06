@@ -1,5 +1,10 @@
 const { app, BrowserWindow, ipcMain, nativeTheme, ipcRenderer } = require('electron');
+const mUtil = require("./modules/Utils.js");
+
 const path = require('path');
+const url = require('url');
+
+require('electron-reload')(__dirname);
 
 nativeTheme.themeSource = 'dark';
 
@@ -12,8 +17,8 @@ function createWindow() {
         // frame: false,
         webPreferences: {
             nodeIntegration: true,
-            // contextIsolation: false,
-            // enableRemoteModule: true,
+            contextIsolation: false,
+            enableRemoteModule: true,
             preload: path.join(__dirname, 'preload.js')
         }
     });
@@ -23,8 +28,23 @@ function createWindow() {
 
     // If you want load local
     win.loadFile('./resources/frontend/index.html');
+
     // If you want load remote
     // win.loadURL('https://www.forexliga.com/electron.html');
+
+    ipcMain.handle('dark-mode:toggle', () => {
+        if (nativeTheme.shouldUseDarkColors) {
+            nativeTheme.themeSource = 'light'
+        } else {
+            nativeTheme.themeSource = 'dark'
+        }
+        
+        return nativeTheme.shouldUseDarkColors
+    });
+
+    ipcMain.handle('dark-mode:system', () => {
+        nativeTheme.themeSource = 'system'
+    });
 }
 
 app.whenReady().then(() => {
@@ -35,10 +55,26 @@ app.whenReady().then(() => {
             createWindow()
         }
     })
-})
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit()
     }
-})
+});
+
+ipcMain.on("message", (event, json) => {
+    switch(json.type) {
+        case "setProgressBar":
+            console.log(BrowserWindow.getAllWindows().length);
+            // {type: "setProgressBar", value: 0.1}
+            if (BrowserWindow.getAllWindows().length == 0) {
+                wins = BrowserWindow.getAllWindows();
+                wins.forEach(function(i, v) {
+                    console.log(i ,v);
+                });
+                
+            }
+            break;
+    }
+});
