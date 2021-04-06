@@ -1,16 +1,30 @@
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
+const { app, BrowserWindow, ipcMain, nativeTheme, ipcRenderer } = require('electron');
+const path = require('path');
+
+nativeTheme.themeSource = 'dark';
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 800,
-        height: 600,
+        width: 1360,
+        height: 780,
+        icon: './resources/icon.png',
+        // resizable: false,
+        // frame: false,
         webPreferences: {
+            nodeIntegration: true,
+            // contextIsolation: false,
+            // enableRemoteModule: true,
             preload: path.join(__dirname, 'preload.js')
         }
-    })
+    });
 
-    win.loadFile('index.html')
+    win.webContents.toggleDevTools();
+    win.removeMenu();
+
+    // If you want load local
+    win.loadFile('./resources/frontend/index.html');
+    // If you want load remote
+    // win.loadURL('https://www.forexliga.com/electron.html');
 }
 
 app.whenReady().then(() => {

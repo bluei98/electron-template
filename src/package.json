@@ -10,6 +10,7 @@
     "build:linux32": "electron-builder --linux --ia32",
     "build:linux64": "electron-builder --linux --x64",
     "build:win": "npm run build:win32 && npm run build:win64",
+    "build:test": "electron-builder --win portable  --x64",
     "build:win32": "electron-builder --win --ia32",
     "build:win64": "electron-builder --win --x64"
   },
@@ -35,21 +36,21 @@
         "zip",
         "nsis"
       ],
-      "icon": "./resources/installer/Icon.ico"
+      "icon": "./resources/icon.ico"
     },
     "mac": {
       "target": [
         "default"
       ],
-      "icon": "./resources/installer/Icon.icns"
+      "icon": "./resources/icon.icns"
     },
     "dmg": {
       "title": "HelloElectron",
-      "icon": "./resources/installer/Icon.icns"
+      "icon": "./resources/icon.icns"
     },
     "linux": {
       "target": [
-        "AppImage", 
+        "AppImage",
         "deb",
         "rpm",
         "zip",
