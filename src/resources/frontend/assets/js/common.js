@@ -1,6 +1,40 @@
 window.$ = window.jQuery = require('jquery');
-const { ipcRenderer, BrowserWindow  } = require('electron');
+const fs = require("fs");
+const http = require("http")
+const { ipcRenderer, BrowserWindow} = require('electron');
+const { app, dialog } = require('electron').remote;
 const mUtil = require('../../modules/Utils.js');
+
+function getFolderMyDocuments() {
+    return app.getPath('documents');
+}
+
+function selectFolder() {
+    var path = dialog.showOpenDialogSync({
+        properties: ['openDirectory']
+    });
+
+    if(typeof(path) == "undefined") return false;
+    else return path[0];
+}
+
+function selectFile() {
+    var path = dialog.showOpenDialogSync({
+        // properties: ['openDirectory']
+    });
+    if(typeof(path) == "undefined") return false;
+    else return path[0];    
+}
+
+function fileDownload(url, dest, cb) {
+    var file = fs.createWriteStream(dest);
+    var request = http.get(url, function (response) {
+        response.pipe(file);
+        file.on('finish', function () {
+            file.close(cb);  // close() is async, call cb after close completes.
+        });
+    });
+}
 
 // Dark / Light Mode
 document.getElementById('toggle-dark-mode').addEventListener('click', async () => {
