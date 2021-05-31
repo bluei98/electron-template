@@ -1,8 +1,8 @@
 window.$ = window.jQuery = require('jquery');
 const fs = require("fs");
 const http = require("http")
-const { ipcRenderer, BrowserWindow} = require('electron');
-const { app, dialog } = require('electron').remote;
+const { ipcRenderer } = require('electron');
+const { app, dialog, BrowserWindow } = require('electron').remote;
 const mUtil = require('../../modules/Utils.js');
 
 function getFolderMyDocuments() {
@@ -36,15 +36,6 @@ function fileDownload(url, dest, cb) {
     });
 }
 
-// Dark / Light Mode
-document.getElementById('toggle-dark-mode').addEventListener('click', async () => {
-    const isDarkMode = await ipcRenderer.invoke('dark-mode:toggle')
-});
-
-document.getElementById('reset-to-system').addEventListener('click', async () => {
-    await ipcRenderer.invoke('dark-mode:system')
-});
-
 // notification("프로그램이름", "요청하신 데이터의 수집이 완료되었습니다.");
 function notification(title, body) {
     const myNotification = new Notification(title, {
@@ -59,3 +50,16 @@ function notification(title, body) {
 const onlineStatus = () => { return navigator.onLine; }
 // window.addEventListener('online', onlineStatus);
 // window.addEventListener('offline', onlineStatus);
+
+// Dark / Light Mode
+if(document.getElementById('toggle-dark-mode')) {
+    document.getElementById('toggle-dark-mode').addEventListener('click', async () => {
+        const isDarkMode = await ipcRenderer.invoke('dark-mode:toggle')
+    });
+}
+
+if(document.getElementById('reset-to-system')) {
+    document.getElementById('reset-to-system').addEventListener('click', async () => {
+        await ipcRenderer.invoke('dark-mode:system')
+    });
+}

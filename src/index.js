@@ -4,7 +4,16 @@ const mUtil = require("./modules/Utils.js");
 const path = require('path');
 const url = require('url');
 
-require('electron-reload')(__dirname);
+// if production mode
+if(__dirname.includes('app.asar')) {
+    console.log('Production Mode');
+    var _path_base = "./"
+}
+else {
+    console.log('Development Mode');
+    require('electron-reload')(__dirname);
+    var _path_base = "./";
+}
 
 nativeTheme.themeSource = 'dark';
 
@@ -23,7 +32,8 @@ function createWindow() {
         }
     });
 
-    win.webContents.toggleDevTools();
+    // Development Version
+    if(!__dirname.includes('app.asar')) win.webContents.toggleDevTools();
     win.removeMenu();
 
     // If you want load local
