@@ -3,7 +3,6 @@ const fs = require("fs");
 const http = require("http")
 const { ipcRenderer } = require('electron');
 const { app, dialog, BrowserWindow } = require('electron').remote;
-const mUtil = require('../../modules/Utils.js');
 
 function getFolderMyDocuments() {
     return app.getPath('documents');
@@ -48,8 +47,8 @@ function notification(title, body) {
 }
 
 const onlineStatus = () => { return navigator.onLine; }
-// window.addEventListener('online', onlineStatus);
-// window.addEventListener('offline', onlineStatus);
+window.addEventListener('online', onlineStatus);
+window.addEventListener('offline', onlineStatus);
 
 // Dark / Light Mode
 if(document.getElementById('toggle-dark-mode')) {
